@@ -2,6 +2,7 @@ package com.skiba.notesmanager.api.service;
 
 import com.skiba.notesmanager.api.dto.NoteCreation;
 import com.skiba.notesmanager.api.dto.NoteDisplay;
+import com.skiba.notesmanager.api.dto.PaginationInfo;
 
 import java.util.List;
 
@@ -17,4 +18,7 @@ public interface NoteService {
 
     NoteDisplay updateNote(NoteCreation noteCreation, Long noteId);
 
+    List<NoteDisplay> getNotesNotUpdatedForMoreThanMonth();
+
+    List<NoteDisplay> getNotesWithSortingAndPagination(PaginationInfo paginationInfo);
 }

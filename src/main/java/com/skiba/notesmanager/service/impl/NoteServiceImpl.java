@@ -2,16 +2,16 @@ package com.skiba.notesmanager.service.impl;
 
 import com.skiba.notesmanager.api.dto.NoteCreation;
 import com.skiba.notesmanager.api.dto.NoteDisplay;
+import com.skiba.notesmanager.api.dto.PaginationInfo;
 import com.skiba.notesmanager.api.service.NoteService;
 import com.skiba.notesmanager.model.Note;
 import com.skiba.notesmanager.repository.NoteRepository;
 import com.skiba.notesmanager.service.exception.NoteNotFoundException;
 import com.skiba.notesmanager.service.mapper.NoteCreationToNoteMapper;
 import com.skiba.notesmanager.service.mapper.NoteToNoteDisplayMapper;
-import lombok.AllArgsConstructor;
-import lombok.NonNull;
+import com.skiba.notesmanager.service.mapper.PaginationInfoToPageRequestMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +29,7 @@ public class NoteServiceImpl implements NoteService {
     private final NoteRepository noteRepository;
     private final NoteToNoteDisplayMapper noteToNoteDisplayMapper;
     private final NoteCreationToNoteMapper noteCreationToNoteMapper;
+    private final PaginationInfoToPageRequestMapper paginationInfoToPageRequestMapper;
 
     @Override
     public List<NoteDisplay> gettAllNotes() {
@@ -81,5 +82,23 @@ public class NoteServiceImpl implements NoteService {
         oldNote.setTitle(noteCreation.getTitle());
         oldNote.setContent(noteCreation.getContent());
         oldNote.setDateOfLastModification(LocalDateTime.now());
+    }
+
+    @Override
+    public List<NoteDisplay> getNotesNotUpdatedForMoreThanMonth() {
+        List<Note> notUpdatedNotes = noteRepository
+                .findNotesByDateOfLastModificationBefore(LocalDateTime.now().minusMonths(1));
+        return notUpdatedNotes.stream()
+                .map(noteToNoteDisplayMapper::map)
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Override
+    public List<NoteDisplay> getNotesWithSortingAndPagination(PaginationInfo paginationInfo) {
+        PageRequest pageRequest = paginationInfoToPageRequestMapper.map(paginationInfo);
+        List<Note> notes = noteRepository.findAll(pageRequest).getContent();
+        return notes.stream()
+                .map(noteToNoteDisplayMapper::map)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 }

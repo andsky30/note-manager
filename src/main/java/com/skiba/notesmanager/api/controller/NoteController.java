@@ -2,6 +2,8 @@ package com.skiba.notesmanager.api.controller;
 
 import com.skiba.notesmanager.api.dto.NoteCreation;
 import com.skiba.notesmanager.api.dto.NoteDisplay;
+import com.skiba.notesmanager.api.dto.PaginationInfo;
+import com.skiba.notesmanager.message.Message;
 import com.skiba.notesmanager.api.service.NoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,8 +15,6 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 
-import static com.skiba.notesmanager.api.message.Message.*;
-
 @RestController
 @RequiredArgsConstructor
 public class NoteController {
@@ -24,6 +24,16 @@ public class NoteController {
     @GetMapping(value = "/api/notes")
     public ResponseEntity<List<NoteDisplay>> getAllNotes(){
         return ResponseEntity.ok(noteService.gettAllNotes());
+    }
+
+    @GetMapping(value = "/api/notes/not_updated")
+    public ResponseEntity<List<NoteDisplay>> getNotUpdatedNotes(){
+        return ResponseEntity.ok(noteService.getNotesNotUpdatedForMoreThanMonth());
+    }
+
+    @PostMapping(value = "/api/notes/pagination")
+    public ResponseEntity<List<NoteDisplay>> getPaginatedNotes(@RequestBody PaginationInfo paginationInfo){
+        return ResponseEntity.ok(noteService.getNotesWithSortingAndPagination(paginationInfo));
     }
 
     @GetMapping(value = "/api/notes/{noteId}")
@@ -45,9 +55,10 @@ public class NoteController {
     @DeleteMapping(value = "/api/notes/{noteId}")
     public ResponseEntity<?> deleteNote(@PathVariable Long noteId) {
         noteService.removeNote(noteId);
+        String message = String.format(Message.MESSAGE_AFTER_NOTE_BY_ID_DELETION.getMessage(), noteId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(String.format(MESSAGE_AFTER_NOTE_BY_ID_DELETION, noteId));
+                .body(message);
     }
 
     @PutMapping(value = "/api/notes/{noteId}")
