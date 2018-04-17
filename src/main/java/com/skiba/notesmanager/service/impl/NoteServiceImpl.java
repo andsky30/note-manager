@@ -5,6 +5,7 @@ import com.skiba.notesmanager.api.dto.NoteDisplay;
 import com.skiba.notesmanager.api.service.NoteService;
 import com.skiba.notesmanager.model.Note;
 import com.skiba.notesmanager.repository.NoteRepository;
+import com.skiba.notesmanager.service.exception.NoteNotFoundException;
 import com.skiba.notesmanager.service.mapper.NoteCreationToNoteMapper;
 import com.skiba.notesmanager.service.mapper.NoteToNoteDisplayMapper;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -26,12 +32,19 @@ public class NoteServiceImpl implements NoteService {
 
     @Override
     public List<NoteDisplay> gettAllNotes() {
-        return null;
+        return noteRepository.findAll().stream()
+                .map(noteToNoteDisplayMapper::map)
+                .collect(Collectors.toCollection(ArrayList::new));
     }
 
     @Override
-    public NoteDisplay getSingleNoteById(Long noteId) {
-        return null;
+    public NoteDisplay getSingleNote(Long noteId) {
+        Optional<Note> noteOptional = noteRepository.findById(noteId);
+        if (!noteOptional.isPresent()) {
+            throw new NoteNotFoundException(noteId);
+        } else {
+            return noteToNoteDisplayMapper.map(noteOptional.get());
+        }
     }
 
     @Override
@@ -42,12 +55,31 @@ public class NoteServiceImpl implements NoteService {
     }
 
     @Override
-    public void removenoteById(Long noteId) {
-
+    public void removeNote(Long noteId) {
+        Optional<Note> noteOptional = noteRepository.findById(noteId);
+        if (!noteOptional.isPresent()) {
+            throw new NoteNotFoundException(noteId);
+        } else {
+            noteRepository.delete(noteOptional.get());
+        }
     }
 
     @Override
     public NoteDisplay updateNote(NoteCreation noteCreation, Long noteId) {
-        return null;
+        Optional<Note> noteOptional = noteRepository.findById(noteId);
+        if (!noteOptional.isPresent()) {
+            throw new NoteNotFoundException(noteId);
+        } else {
+            Note oldNote = noteOptional.get();
+            updateNoteAttributes(noteCreation, oldNote);
+            Note savedNote = noteRepository.save(oldNote);
+            return noteToNoteDisplayMapper.map(savedNote);
+        }
+    }
+
+    private void updateNoteAttributes(NoteCreation noteCreation, Note oldNote) {
+        oldNote.setTitle(noteCreation.getTitle());
+        oldNote.setContent(noteCreation.getContent());
+        oldNote.setDateOfLastModification(LocalDateTime.now());
     }
 }

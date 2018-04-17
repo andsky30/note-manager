@@ -1,21 +1,17 @@
 package com.skiba.notesmanager.api.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 public class NoteCreation {
 
     @NotBlank(message = "Note title cannot be blank!")
     private String title;
-    @NotBlank(message = "Note content  cannot be blank!")
+    @NotBlank(message = "Note content cannot be blank!")
     private String content;
 
 }

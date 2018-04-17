@@ -9,11 +9,11 @@ public interface NoteService {
 
     List<NoteDisplay> gettAllNotes();
 
-    NoteDisplay getSingleNoteById(Long noteId);
+    NoteDisplay getSingleNote(Long noteId);
 
     NoteDisplay addNote(NoteCreation noteCreation);
 
-    void removenoteById(Long noteId);
+    void removeNote(Long noteId);
 
     NoteDisplay updateNote(NoteCreation noteCreation, Long noteId);
 

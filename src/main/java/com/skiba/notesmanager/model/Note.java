@@ -5,10 +5,11 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@NoArgsConstructor
 @RequiredArgsConstructor
-@Getter
+@Setter @Getter
 @Entity
 @Table(name = "note")
 public class Note {
@@ -17,6 +18,7 @@ public class Note {
     @GeneratedValue
     @NotNull
     @Column(name = "note_id")
+    @Setter(AccessLevel.NONE)
     private Long id;
     @NotNull
     @NonNull
@@ -27,9 +29,10 @@ public class Note {
     @NotNull
     @NonNull
     @PastOrPresent
-    private LocalDate dateOfCreation;
+    @Setter(AccessLevel.NONE)
+    private LocalDateTime dateOfCreation;
     @NotNull
     @NonNull
     @PastOrPresent
-    private LocalDate dateOfLastModification;
+    private LocalDateTime dateOfLastModification;
 }

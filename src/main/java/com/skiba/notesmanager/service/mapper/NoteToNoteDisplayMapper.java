@@ -5,18 +5,18 @@ import com.skiba.notesmanager.model.Note;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Component
 @NoArgsConstructor
 public class NoteToNoteDisplayMapper {
 
-    public static final DateTimeFormatter LOCAL_DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+    public static final DateTimeFormatter LOCAL_DATE_TIME_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public NoteDisplay map(Note note) {
-        String dateOfCreation = localDateToStringFormatter(note.getDateOfCreation());
-        String dateOfLastModification = localDateToStringFormatter(note.getDateOfLastModification());
+        String dateOfCreation = localDateTimeToStringFormatter(note.getDateOfCreation());
+        String dateOfLastModification = localDateTimeToStringFormatter(note.getDateOfLastModification());
         return new NoteDisplay(note.getId(),
                 note.getTitle(),
                 note.getContent(),
@@ -24,7 +24,7 @@ public class NoteToNoteDisplayMapper {
                 dateOfLastModification);
     }
 
-    private String localDateToStringFormatter(LocalDate localDate) {
-        return localDate.format(LOCAL_DATE_FORMATTER);
+    private String localDateTimeToStringFormatter(LocalDateTime localDateTime) {
+        return localDateTime.format(LOCAL_DATE_TIME_FORMATTER);
     }
 }
