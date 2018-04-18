@@ -6,7 +6,7 @@ import com.skiba.notesmanager.api.dto.PaginationInfo;
 import com.skiba.notesmanager.api.service.NoteService;
 import com.skiba.notesmanager.model.Note;
 import com.skiba.notesmanager.repository.NoteRepository;
-import com.skiba.notesmanager.service.exception.NoteNotFoundException;
+import com.skiba.notesmanager.validation.exceptions.NoteNotFoundException;
 import com.skiba.notesmanager.service.mapper.NoteCreationToNoteMapper;
 import com.skiba.notesmanager.service.mapper.NoteToNoteDisplayMapper;
 import com.skiba.notesmanager.service.mapper.PaginationInfoToPageRequestMapper;

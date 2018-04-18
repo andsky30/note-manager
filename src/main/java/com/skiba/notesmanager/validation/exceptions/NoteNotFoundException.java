@@ -1,6 +1,6 @@
-package com.skiba.notesmanager.service.exception;
+package com.skiba.notesmanager.validation.exceptions;
 
-import com.skiba.notesmanager.message.Message;
+import com.skiba.notesmanager.util.Message;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

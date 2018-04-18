@@ -3,7 +3,7 @@ package com.skiba.notesmanager.api.controller;
 import com.skiba.notesmanager.api.dto.NoteCreation;
 import com.skiba.notesmanager.api.dto.NoteDisplay;
 import com.skiba.notesmanager.api.dto.PaginationInfo;
-import com.skiba.notesmanager.message.Message;
+import com.skiba.notesmanager.util.Message;
 import com.skiba.notesmanager.api.service.NoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
