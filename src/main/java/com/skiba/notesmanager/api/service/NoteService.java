@@ -18,7 +18,5 @@ public interface NoteService {
 
     NoteDisplay updateNote(NoteCreation noteCreation, Long noteId);
 
-    List<NoteDisplay> getNotesNotUpdatedForMoreThanMonth();
 
-    List<NoteDisplay> getNotesWithSortingAndPagination(PaginationInfo paginationInfo);
 }

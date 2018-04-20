@@ -2,10 +2,9 @@ package com.skiba.notesmanager.api.controller;
 
 import com.skiba.notesmanager.api.dto.NoteCreation;
 import com.skiba.notesmanager.api.dto.NoteDisplay;
-import com.skiba.notesmanager.api.dto.PaginationInfo;
 import com.skiba.notesmanager.util.Message;
 import com.skiba.notesmanager.api.service.NoteService;
-import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,24 +15,18 @@ import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequiredArgsConstructor
 public class NoteController {
 
-    private final NoteService noteService;
+    private NoteService noteService;
+
+    @Autowired
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
+    }
 
     @GetMapping(value = "/api/notes")
     public ResponseEntity<List<NoteDisplay>> getAllNotes(){
         return ResponseEntity.ok(noteService.gettAllNotes());
-    }
-
-    @GetMapping(value = "/api/notes/not_updated")
-    public ResponseEntity<List<NoteDisplay>> getNotUpdatedNotes(){
-        return ResponseEntity.ok(noteService.getNotesNotUpdatedForMoreThanMonth());
-    }
-
-    @PostMapping(value = "/api/notes/pagination")
-    public ResponseEntity<List<NoteDisplay>> getPaginatedNotes(@RequestBody PaginationInfo paginationInfo){
-        return ResponseEntity.ok(noteService.getNotesWithSortingAndPagination(paginationInfo));
     }
 
     @GetMapping(value = "/api/notes/{noteId}")
