@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @RequiredArgsConstructor
-@Setter @Getter
+@AllArgsConstructor
+@Setter @Getter @Builder
 @Entity
 @Table(name = "note")
 public class Note {
@@ -18,7 +19,6 @@ public class Note {
     @GeneratedValue
     @NotNull
     @Column(name = "note_id")
-    @Setter(AccessLevel.NONE)
     private Long id;
     @NotNull
     @NonNull

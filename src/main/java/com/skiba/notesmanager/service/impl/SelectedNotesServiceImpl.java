@@ -5,7 +5,6 @@ import com.skiba.notesmanager.api.dto.PaginationInfo;
 import com.skiba.notesmanager.api.service.SelectedNotesService;
 import com.skiba.notesmanager.model.Note;
 import com.skiba.notesmanager.repository.NoteRepository;
-import com.skiba.notesmanager.service.mapper.NoteCreationToNoteMapper;
 import com.skiba.notesmanager.service.mapper.NoteToNoteDisplayMapper;
 import com.skiba.notesmanager.service.mapper.PaginationInfoToPageRequestMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,17 +21,14 @@ public class SelectedNotesServiceImpl implements SelectedNotesService {
 
     private NoteRepository noteRepository;
     private NoteToNoteDisplayMapper noteToNoteDisplayMapper;
-    private NoteCreationToNoteMapper noteCreationToNoteMapper;
     private PaginationInfoToPageRequestMapper paginationInfoToPageRequestMapper;
 
     @Autowired
     public SelectedNotesServiceImpl(NoteRepository noteRepository,
                                     NoteToNoteDisplayMapper noteToNoteDisplayMapper,
-                                    NoteCreationToNoteMapper noteCreationToNoteMapper,
                                     PaginationInfoToPageRequestMapper paginationInfoToPageRequestMapper) {
         this.noteRepository = noteRepository;
         this.noteToNoteDisplayMapper = noteToNoteDisplayMapper;
-        this.noteCreationToNoteMapper = noteCreationToNoteMapper;
         this.paginationInfoToPageRequestMapper = paginationInfoToPageRequestMapper;
     }
 

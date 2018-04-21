@@ -1,6 +1,5 @@
 package com.skiba.notesmanager.validation;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -12,7 +11,6 @@ import java.util.List;
 public class ApiError {
 
     private HttpStatus httpStatus;
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime timestamp;
     private List<ApiSubError> errors;
 

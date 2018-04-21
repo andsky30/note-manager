@@ -2,7 +2,6 @@ package com.skiba.notesmanager.service.impl;
 
 import com.skiba.notesmanager.api.dto.NoteCreation;
 import com.skiba.notesmanager.api.dto.NoteDisplay;
-import com.skiba.notesmanager.api.dto.PaginationInfo;
 import com.skiba.notesmanager.api.service.NoteService;
 import com.skiba.notesmanager.model.Note;
 import com.skiba.notesmanager.repository.NoteRepository;
@@ -10,9 +9,7 @@ import com.skiba.notesmanager.validation.exceptions.NoteNotFoundException;
 import com.skiba.notesmanager.service.mapper.NoteCreationToNoteMapper;
 import com.skiba.notesmanager.service.mapper.NoteToNoteDisplayMapper;
 import com.skiba.notesmanager.service.mapper.PaginationInfoToPageRequestMapper;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,17 +26,14 @@ public class NoteServiceImpl implements NoteService {
     private NoteRepository noteRepository;
     private NoteToNoteDisplayMapper noteToNoteDisplayMapper;
     private NoteCreationToNoteMapper noteCreationToNoteMapper;
-    private PaginationInfoToPageRequestMapper paginationInfoToPageRequestMapper;
 
     @Autowired
     public NoteServiceImpl(NoteRepository noteRepository,
                            NoteToNoteDisplayMapper noteToNoteDisplayMapper,
-                           NoteCreationToNoteMapper noteCreationToNoteMapper,
-                           PaginationInfoToPageRequestMapper paginationInfoToPageRequestMapper) {
+                           NoteCreationToNoteMapper noteCreationToNoteMapper) {
         this.noteRepository = noteRepository;
         this.noteToNoteDisplayMapper = noteToNoteDisplayMapper;
         this.noteCreationToNoteMapper = noteCreationToNoteMapper;
-        this.paginationInfoToPageRequestMapper = paginationInfoToPageRequestMapper;
     }
 
     @Override
