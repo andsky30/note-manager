@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean;
 import java.sql.SQLException;
 
 @SpringBootApplication
-@EntityScan(basePackages = {"com.skiba.notesmanager"})
+@EntityScan(basePackages = "com.skiba.notesmanager")
 public class NotesManagerApplication {
 
 	public static void main(String[] args) {

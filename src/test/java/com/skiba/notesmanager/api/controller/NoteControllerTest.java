@@ -18,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
@@ -31,7 +32,6 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 @TestPropertySource(locations = "classpath:application-test.properties")
 public class NoteControllerTest extends AbstractTestNGSpringContextTests {
 
-    private static final int INITIAL_NOTES_IN_DB_SIZE_2 = 2;
     private static final int INDEX_0 = 0;
     private static final Long NOT_EXISTING_NOTE_ID = 234L;
     private static final String NOTE_TITLE_3 = "Title3";
@@ -51,8 +51,13 @@ public class NoteControllerTest extends AbstractTestNGSpringContextTests {
         testDataLoader.addTwoNotes();
     }
 
+    @AfterClass
+    public void cleanUp() {
+        noteRepository.deleteAll();
+    }
+
     @Test
-    public void shouldReturnAllUsers() {
+    public void shouldReturnAllNotes() {
         //given
 
         //when
@@ -68,9 +73,9 @@ public class NoteControllerTest extends AbstractTestNGSpringContextTests {
         assertThat(responseEntity).isNotNull();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
         //check user list
-        List<NoteDisplay> returnedUsers = responseEntity.getBody();
-        assertThat(returnedUsers).isNotNull();
-        assertThat(returnedUsers.size()).isEqualTo(INITIAL_NOTES_IN_DB_SIZE_2);
+        List<NoteDisplay> returnedNotes = responseEntity.getBody();
+        assertThat(returnedNotes).isNotNull();
+        assertThat(returnedNotes.size()).isEqualTo(TestDataLoader.INITIAL_NOTES_IN_DB_SIZE_2);
     }
 
     @Test
@@ -128,7 +133,7 @@ public class NoteControllerTest extends AbstractTestNGSpringContextTests {
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         NoteDisplay noteDisplay = responseEntity.getBody();
         assertThat(noteDisplay.getContent()).isEqualTo(NOTE_CONTENT_3);
-        assertThat(noteRepository.findAll()).hasSize(INITIAL_NOTES_IN_DB_SIZE_2 + 1);
+        assertThat(noteRepository.findAll()).hasSize(TestDataLoader.INITIAL_NOTES_IN_DB_SIZE_2 + 1);
 
         //remove added note to not mess with another tests
         noteRepository.deleteById(noteDisplay.getId());
@@ -188,7 +193,7 @@ public class NoteControllerTest extends AbstractTestNGSpringContextTests {
         //then
         assertThat(responseEntity).isNotNull();
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(noteRepository.findAll()).hasSize(INITIAL_NOTES_IN_DB_SIZE_2 - 1);
+        assertThat(noteRepository.findAll()).hasSize(TestDataLoader.INITIAL_NOTES_IN_DB_SIZE_2 - 1);
 
         //add removed note to not mess with other test
         noteRepository.save(noteToRemove);
@@ -213,8 +218,8 @@ public class NoteControllerTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldUpdateOneNote() {
         //given
-        NoteCreation updatedNoteCretion = new NoteCreation(NOTE_TITLE_3, NOTE_CONTENT_3);
-        HttpEntity<NoteCreation> requestEntity = new HttpEntity<>(updatedNoteCretion);
+        NoteCreation updatedNoteCreation = new NoteCreation(NOTE_TITLE_3, NOTE_CONTENT_3);
+        HttpEntity<NoteCreation> requestEntity = new HttpEntity<>(updatedNoteCreation);
 
         //when
         ResponseEntity<NoteDisplay> responseEntity = testRestTemplate
@@ -243,8 +248,8 @@ public class NoteControllerTest extends AbstractTestNGSpringContextTests {
     @Test
     public void shouldReturnNotFoundStatusWhenNoteToUpdateIdIsInvalid() {
         //given
-        NoteCreation updatedNoteCretion = new NoteCreation(NOTE_TITLE_3, NOTE_CONTENT_3);
-        HttpEntity<NoteCreation> requestEntity = new HttpEntity<>(updatedNoteCretion);
+        NoteCreation updatedNoteCreation = new NoteCreation(NOTE_TITLE_3, NOTE_CONTENT_3);
+        HttpEntity<NoteCreation> requestEntity = new HttpEntity<>(updatedNoteCreation);
 
         //when
         ResponseEntity<ApiError> responseEntity = testRestTemplate

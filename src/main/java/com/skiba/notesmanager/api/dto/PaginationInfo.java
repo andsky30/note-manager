@@ -1,7 +1,9 @@
 package com.skiba.notesmanager.api.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+@AllArgsConstructor
 @Getter
 public class PaginationInfo {
 

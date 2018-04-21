@@ -25,7 +25,7 @@ public class TestDataLoader implements ApplicationRunner {
     public static final int INITIAL_NOTES_SIZE = 2;
     public static final Long NOTE_ID_1 = 1L;
     public static final Long NOTE_ID_2 = 2L;
-
+    public static final int INITIAL_NOTES_IN_DB_SIZE_2 = 2;
 
     @Autowired
     private NoteRepository noteRepository;
@@ -33,9 +33,7 @@ public class TestDataLoader implements ApplicationRunner {
     private NoteCreationToNoteMapper noteCreationToNoteMapper = new NoteCreationToNoteMapper();
 
     @Override
-    public void run(ApplicationArguments args) throws Exception {
-
-    }
+    public void run(ApplicationArguments args) throws Exception {}
 
     public void addTwoNotes() {
         Note note1 = noteCreationToNoteMapper.map(new NoteCreation(NOTE_TITLE_1, NOTE_CONTENT_1));
