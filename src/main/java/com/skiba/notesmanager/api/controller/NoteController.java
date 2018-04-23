@@ -62,6 +62,4 @@ public class NoteController {
                 .status(HttpStatus.OK)
                 .body(updatedNoteDisplay);
     }
-
-
 }

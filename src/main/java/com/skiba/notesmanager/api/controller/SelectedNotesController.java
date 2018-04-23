@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -28,7 +29,7 @@ public class SelectedNotesController {
     }
 
     @PostMapping(value = "/api/notes/pagination")
-    public ResponseEntity<List<NoteDisplay>> getPaginatedNotes(@RequestBody PaginationInfo paginationInfo){
+    public ResponseEntity<List<NoteDisplay>> getPaginatedNotes(@RequestBody @Valid PaginationInfo paginationInfo){
         return ResponseEntity.ok(selectedNotesService.getNotesWithSortingAndPagination(paginationInfo));
     }
 }

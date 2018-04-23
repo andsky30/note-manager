@@ -53,6 +53,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             case "content":
                 errorType =  ErrorType.EMPTY_NOTE_CONTENT;
                 break;
+            case "sortDirection":
+                errorType =  ErrorType.INVALID_SORT_DIRECTON_TYPE;
+                break;
+            case "sortColumn":
+                errorType =  ErrorType.INVALID_SORT_COLUMN_NAME;
+                break;
         }
         return errorType;
     }

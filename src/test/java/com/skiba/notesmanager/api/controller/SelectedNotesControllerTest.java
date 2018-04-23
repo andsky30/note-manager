@@ -1,13 +1,18 @@
 package com.skiba.notesmanager.api.controller;
 
 import com.skiba.notesmanager.api.dto.NoteDisplay;
+import com.skiba.notesmanager.api.dto.PaginationInfo;
 import com.skiba.notesmanager.data.TestDataLoader;
 import com.skiba.notesmanager.model.Note;
 import com.skiba.notesmanager.repository.NoteRepository;
+import com.skiba.notesmanager.validation.ApiError;
+import com.skiba.notesmanager.validation.ApiSubError;
+import com.skiba.notesmanager.validation.ErrorType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +36,10 @@ public class SelectedNotesControllerTest extends AbstractTestNGSpringContextTest
 
     private static final LocalDateTime DATE_OF_LAST_MODIFICATION_MORE_THAN_MONTH_AGO = LocalDateTime.of(2017, 01, 01, 01, 01, 01);
     private static final int INDEX_0 = 0;
+    public static final String COLUMN_NAME_TITLE = "title";
+    public static final String SORT_DIRECTION_ASC = "asc";
+    public static final String INVALID_SORT_DIRECTION_TYPE = "aggagahahgghasghahs";
+    public static final String INVALID_SORT_COLUMN_NAME = "sdfsdfsdfsdf";
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -81,12 +90,84 @@ public class SelectedNotesControllerTest extends AbstractTestNGSpringContextTest
     }
 
     @Test
-    public void name() {
+    public void shouldReturnOneNoteDisplayOnOnePage() {
         //given
+        PaginationInfo paginationInfo = PaginationInfo.builder()
+                .pageSize(1)
+                .pageOffset(1)
+                .sortColumn(COLUMN_NAME_TITLE)
+                .sortDirection(SORT_DIRECTION_ASC)
+                .build();
+        HttpEntity<PaginationInfo> requestEntity = new HttpEntity<>(paginationInfo);
 
         //when
+        ResponseEntity<List<NoteDisplay>> responseEntity = testRestTemplate
+                .exchange("/api/notes/pagination",
+                        HttpMethod.POST,
+                        requestEntity,
+                        new ParameterizedTypeReference<List<NoteDisplay>>() {
+                        });
 
         //then
+        assertThat(responseEntity).isNotNull();
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+        //check expected note display
+        List<NoteDisplay> returnedNotes = responseEntity.getBody();
+        assertThat(returnedNotes.size()).isEqualTo(1);
+        assertThat(returnedNotes.get(INDEX_0).getTitle()).isEqualTo(TestDataLoader.NOTE_TITLE_2);
+    }
 
+    @Test
+    public void shouldReturnApiErrorBecauseOfInvalidSortDirectionType() {
+        //given
+        PaginationInfo paginationInfo = PaginationInfo.builder()
+                .pageSize(3)
+                .pageOffset(1)
+                .sortColumn(COLUMN_NAME_TITLE)
+                .sortDirection(INVALID_SORT_DIRECTION_TYPE)
+                .build();
+        HttpEntity<PaginationInfo> requestEntity = new HttpEntity<>(paginationInfo);
+
+        //when
+        ResponseEntity<ApiError> responseEntity = testRestTemplate
+                .exchange("/api/notes/pagination",
+                        HttpMethod.POST,
+                        requestEntity,
+                        ApiError.class);
+
+        //then
+        assertThat(responseEntity).isNotNull();
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        //check expected note display
+        List<ApiSubError> errors = responseEntity.getBody().getErrors();
+        assertThat(errors.size()).isEqualTo(1);
+        assertThat(errors.get(INDEX_0).getErrorType()).isEqualTo(ErrorType.INVALID_SORT_DIRECTON_TYPE);
+    }
+
+    @Test
+    public void shouldReturnApiErrorBecauseOfInvalidSortColumnName() {
+        //given
+        PaginationInfo paginationInfo = PaginationInfo.builder()
+                .pageSize(1)
+                .pageOffset(1)
+                .sortColumn(INVALID_SORT_COLUMN_NAME)
+                .sortDirection(SORT_DIRECTION_ASC)
+                .build();
+        HttpEntity<PaginationInfo> requestEntity = new HttpEntity<>(paginationInfo);
+
+        //when
+        ResponseEntity<ApiError> responseEntity = testRestTemplate
+                .exchange("/api/notes/pagination",
+                        HttpMethod.POST,
+                        requestEntity,
+                        ApiError.class);
+
+        //then
+        assertThat(responseEntity).isNotNull();
+        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        //check expected note display
+        List<ApiSubError> errors = responseEntity.getBody().getErrors();
+        assertThat(errors.size()).isEqualTo(1);
+        assertThat(errors.get(INDEX_0).getErrorType()).isEqualTo(ErrorType.INVALID_SORT_COLUMN_NAME);
     }
 }
